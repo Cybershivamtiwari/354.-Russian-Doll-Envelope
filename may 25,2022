@@ -1,0 +1,27 @@
+class Solution:
+    def maxEnvelopes(self, envelopes: List[List[int]]) -> int:
+        envelopes = sorted(envelopes, key=lambda x:(x[1], -x[0]))
+        ans = [envelopes[0][0]]
+        
+        def binary(ans, n):
+            left, right = 0, len(ans)-1
+            
+            while left <= right:
+                mid = (left + right)//2
+                
+                if ans[mid] == n:
+                    return mid
+                elif ans[mid] > n:
+                    right = mid - 1
+                else:
+                    left = mid + 1
+            return left
+        
+        for w, h in envelopes:
+            if ans[-1] < w:
+                ans.append(w)
+            elif ans[-1] > w:
+                idx = binary(ans, w)
+                ans[idx] = w
+                
+        return len(ans)
